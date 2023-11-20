@@ -1,51 +1,47 @@
 const { db } = require("../database/connectDB");
 const bcrypt = require("bcrypt");
 
+  
 //user login
 const login = async (req, res) => {
-    const { email, password } = req.body;
-    //query to find email that match
-    const query = `SELECT * FROM users WHERE email='${email}'`;
+  const { username, password } = req.body;
+  //query to find email that match
+  const query = `SELECT * FROM account WHERE username='${username}'`;    const result = await db.query(query);
+  const user = result.rows[0];
+  if (user) {
     try {
-      const result = await db.query(query);
-      const user = result.rows[0];
-      if (user) {
-        try {
-          //if email matched, compare encrypted password
-          const compareResult = await bcrypt.compare(password, user.password);
-          //if email and password matched
-          if (compareResult === true) {
-            req.session.email = user.email;
-            req.session.username = user.username;
-            console.log('Received session identifier:', req.session.username); // Log the received session identifier
-            res.status(200).json({ success: true, message: "Login Successful" });
-          }
-          //if password not matched
-          else {
-            res.status(401).json({ success: false, message: "Invalid credentials" });
-          }
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ success: false, message: "Internal server error" });
-        }
-      } else {
+      //if email matched, compare encrypted password
+      const compareResult = await bcrypt.compare(password, user.password);
+      //if email and password matched
+      if (compareResult === true) {
+        req.session.username = user.username;
+        console.log('Received session identifier:', req.session.username); // Log the received session identifier
+        res.status(200).json({ success: true, message: "Login Successful" });
+      }
+      //if password not matched
+      else {
         res.status(401).json({ success: false, message: "Invalid credentials" });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       res.status(500).json({ success: false, message: "Internal server error" });
     }
-  };
-  
-  
+  } else {
+    res.status(401).json({ success: false, message: "Invalid credentials" });
+  }
+};
+
 //user register
 const register = async (req, res) => {
   //retreive email, username, and password
-  const { email, username, password } = req.body;
+  const { firstName, lastName,  username, password, university, email } = req.body;
+  console.log(password);
   //password encryption
   const hash = bcrypt.hashSync(password, 10);
   //query to update users table
-  const query = `INSERT INTO users(FirstName, LastName,  username, university) VALUES ('${email}', '${username}', '${hash}');`;
+  const query = `INSERT INTO account(firstName, lastName,  username, password, university, email) VALUES ('${firstName}', '${lastName}',
+  '${username}', '${hash}', '${university}', '${email}');`;
+  console.log(query);
   try {
     //query succeed
     await db.query(query);
