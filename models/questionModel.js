@@ -1,3 +1,5 @@
+const { db } = require("../database/connectDB");
+
 const getQuestion = async (req, res) => {
     const { userID, password } = req.body;
     //query to find email that match
@@ -32,3 +34,30 @@ const getQuestion = async (req, res) => {
       res.status(500).json({ success: false, message: "Internal server error" });
     }
   };
+
+
+  const postQuestion = async (req, res) => {
+    const { question, imageURL } = req.body;
+    //query to find email that match
+    const query = `INSERT INTO question(question, imageurl, userid) VALUES ('${question}', '${imageURL}', ${req.session.accountid});`;
+    try {
+      const result = await db.query(query);
+      const insertedQuestion = result.rows[0];
+
+      res.json({
+        success: true,
+        message: 'Question Posted',
+        question: question,
+        imageurl: imageURL,
+        accountid: req.session.accountid,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  };
+
+module.exports = {
+  postQuestion
+};
+  

@@ -15,7 +15,8 @@ const login = async (req, res) => {
       //if email and password matched
       if (compareResult === true) {
         req.session.username = user.username;
-        console.log('Received session identifier:', req.session.username); // Log the received session identifier
+        req.session.accountid = user.accountid;
+        console.log('Received session identifier:', req.session.username, '\nAccountID: ', req.session.accountid); // Log the received session identifier
         res.status(200).json({ success: true, message: "Login Successful" });
       }
       //if password not matched
@@ -41,7 +42,6 @@ const register = async (req, res) => {
   //query to update users table
   const query = `INSERT INTO account(firstName, lastName,  username, password, university, email) VALUES ('${firstName}', '${lastName}',
   '${username}', '${hash}', '${university}', '${email}');`;
-  console.log(query);
   try {
     //query succeed
     await db.query(query);
