@@ -6,18 +6,6 @@ const bcrypt = require("bcrypt");
 
 //user login
 const postQuestion = async (req, res) => {
-    console.log("Masuk");
-    try {
-        model.postQuestion(req, res);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: "Internal server error" });
-    }
-};
- 
-//user login
-const deleteQuestion = async (req, res) => {
-    console.log("Masuk");
     try {
         model.postQuestion(req, res);
     } catch (error) {
@@ -26,9 +14,41 @@ const deleteQuestion = async (req, res) => {
     }
 };
 
+//user login
+const getQuestionPaginate = async (req, res) => {
+    try {
+        model.getQuestionPaginate(req, res);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+//user login
+const deleteQuestion = async (req, res) => {
+    try {
+        model.postQuestion(req, res);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+//increments like
+const incrementLike = async (req, res) => {
+    try {
+        model.incrementLike(req, res);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
 module.exports = {
     postQuestion,
-    deleteQuestion
+    deleteQuestion,
+    getQuestionPaginate, 
+    incrementLike
 };
   
 

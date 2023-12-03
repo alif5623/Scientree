@@ -1,42 +1,28 @@
 const { db } = require("../database/connectDB");
 
-const getQuestion = async (req, res) => {
-    const { userID, password } = req.body;
-    //query to find email that match
-    const query = `SELECT * FROM users WHERE email='${email}'`;
-    try {
+//get top question in paginated format
+const getQuestionPaginate = async (req, res) => {
+  const limit = 20; // number of records per page
+  let offset = 0; // start from the first record
+
+  if (req.body.page) {
+      offset = req.body.page * limit; // calculate the offset
+  }
+  //query to get top ranked anime in paginated format
+  const query = `SELECT *, ROW_NUMBER () OVER (
+          ORDER BY likecount DESC
+          ) AS rank FROM question OFFSET ${offset} LIMIT ${limit};`
+  try {
       const result = await db.query(query);
-      const user = result.rows[0];
-      if (user) {
-        try {
-          //if email matched, compare encrypted password
-          const compareResult = await bcrypt.compare(password, user.password);
-          //if email and password matched
-          if (compareResult === true) {
-            req.session.email = user.email;
-            req.session.username = user.username;
-            console.log('Received session identifier:', req.session.username); // Log the received session identifier
-            res.status(200).json({ success: true, message: "Login Successful" });
-          }
-          //if password not matched
-          else {
-            res.status(401).json({ success: false, message: "Invalid credentials" });
-          }
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ success: false, message: "Internal server error" });
-        }
-      } else {
-        res.status(401).json({ success: false, message: "Invalid credentials" });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ success: false, message: "Internal server error" });
-    }
-  };
+      const list = result.rows;
+      res.status(200).json(list);
+  } catch (err) {
+      console.log(err);
+      res.status(500).json({err: 'Failed to get question'});
+  }
+};
 
-
-  const postQuestion = async (req, res) => {
+const postQuestion = async (req, res) => {
     const { question, imageURL } = req.body;
     //query to find email that match
     const query = `INSERT INTO question(question, imageurl, userid) VALUES ('${question}', '${imageURL}', ${req.session.accountid});`;
@@ -57,7 +43,35 @@ const getQuestion = async (req, res) => {
     }
   };
 
+const incrementLike = async (req, res) => {
+    const { questionID, userID } = req.body;
+    let query = `UPDATE question SET likecount = likecount + 1 WHERE questionid = ${questionID}`;
+    console.log(query);
+    try {
+      // Update likecount
+      const result = await db.query(query);
+  
+      // If the update was successful, proceed to insert into questionLikes
+      query = `INSERT INTO questionLikes(questionid, accountid) VALUES (${questionID}, ${userID});`;
+      console.log(query);
+      try {
+        const insertResult = await db.query(query);
+        res.send("Like added to questionID = " + questionID);
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Error adding like" });
+      }
+  
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message: "Error incrementing like count" });
+    }
+};
+  
+
 module.exports = {
-  postQuestion
+  postQuestion, 
+  getQuestionPaginate, 
+  incrementLike
 };
   
