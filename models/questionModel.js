@@ -1,7 +1,7 @@
 const { db } = require("../database/connectDB");
 
 //get top question in paginated format
-const getQuestionPaginate = async (req, res) => {
+const getQuestionPaginatedByRank = async (req, res) => {
   const limit = 20; // number of records per page
   let offset = 0; // start from the first record
 
@@ -41,7 +41,67 @@ const postQuestion = async (req, res) => {
       console.log(error);
       res.status(500).json({ success: false, message: "Internal server error" });
     }
-  };
+};
+
+const updateQuestion = async (req, res) => {
+  const { questionID, newQuestion, newImageurl} = req.body;
+  //query to find email that match
+  const query = `UPDATE question SET question = '${newQuestion}', imageurl = '${newImageurl}' WHERE questionID = ${questionID};`;
+  try {
+    const result = await db.query(query);
+    res.json({
+      success: true,
+      message: 'Question Posted',
+      question: newQuestion,
+      imageurl: newImageurl,
+      accountid: req.session.accountid,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+
+const deleteQuestion = async (req, res) => {
+  const { questionID } = req.body;
+  //query to find email that match
+  const query = `DELETE FROM question WHERE questionID = ${questionID} AND userID = ${req.session.accountid}`;
+  console.log(query)
+  try {
+    const result = await db.query(query);
+    res.json({
+      success: true,
+      message: 'Question Deleted',
+      question: questionID,
+      accountid: req.session.accountid,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const getQuestionPaginatedByTime = async (req, res) => {
+  const limit = 20; // number of records per page
+  let offset = 0; // start from the first record
+
+  if (req.body.page) {
+      offset = req.body.page * limit; // calculate the offset
+  }
+  //query to get top ranked anime in paginated format
+  const query = `SELECT *, ROW_NUMBER () OVER (
+          ORDER BY timestamp DESC
+          ) AS rank FROM question OFFSET ${offset} LIMIT ${limit};`
+  try {
+      const result = await db.query(query);
+      const list = result.rows;
+      res.status(200).json(list);
+  } catch (err) {
+      console.log(err);
+      res.status(500).json({err: 'Failed to get question'});
+  }
+}
 
 const incrementLike = async (req, res) => {
     const { questionID, userID } = req.body;
@@ -71,7 +131,10 @@ const incrementLike = async (req, res) => {
 
 module.exports = {
   postQuestion, 
-  getQuestionPaginate, 
-  incrementLike
+  getQuestionPaginatedByRank,
+  getQuestionPaginatedByTime, 
+  incrementLike, 
+  updateQuestion, 
+  deleteQuestion
 };
   

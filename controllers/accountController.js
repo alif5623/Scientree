@@ -15,6 +15,15 @@ const login = async (req, res) => {
     }
 };
   
+//user logout
+const logout = async (req, res) => {
+  try {
+      model.logout(req, res);
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
   
 //user register
 const register = async (req, res) => {
@@ -24,17 +33,6 @@ const register = async (req, res) => {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
-};
-
-//user logout
-const logout = async (req, res) => {
-  //destroy session
-  req.session.destroy((err) => {
-    if (err) {
-      res.end("error");
-    }
-    res.end("logout");
-  });
 };
 
 //show all user table

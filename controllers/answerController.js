@@ -1,61 +1,53 @@
 const {db} = require("../database/connectDB");
 const {end, send} = require("express/lib/response");
 const {json} = require("express");
-const model = require('../models/questionModel');
-const bcrypt = require("bcrypt");
+const model = require('../models/answerModel');
 
-//Post new question
-const postQuestion = async (req, res) => {
+//Post new answer
+const postAnswer = async (req, res) => {
+    console.log("Masuk")
     try {
-        model.postQuestion(req, res);
+        model.postAnswer(req, res);
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
-//Post new question
-const updateQuestion = async (req, res) => {
+//Update new answer
+const updateAnswer = async (req, res) => {
+    console.log("Masuk")
     try {
-        model.updateQuestion(req, res);
+        model.updateAnswer(req, res);
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
-
-//user login
-const getQuestionPaginatedByRank = async (req, res) => {
+//Delete answer
+const deleteAnswer = async (req, res) => {
+    console.log("Masuk")
     try {
-        model.getQuestionPaginatedByRank(req, res);
+        model.deleteAnswer(req, res);
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
-//user login
-const getQuestionPaginatedByTime = async (req, res) => {
+//Update new answer
+const getAnswerByID = async (req, res) => {
+    console.log("Masuk")
     try {
-        model.getQuestionPaginatedByTime(req, res);
+        model.getAnswerByID(req, res);
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
-//deleteQuestion
-const deleteQuestion = async (req, res) => {
-    try {
-        model.deleteQuestion(req, res);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: "Internal server error" });
-    }
-};
-
-//increments like
+//Update new answer
 const incrementLike = async (req, res) => {
     try {
         model.incrementLike(req, res);
@@ -65,13 +57,12 @@ const incrementLike = async (req, res) => {
     }
 };
 
+
 module.exports = {
-    postQuestion,
-    deleteQuestion,
-    getQuestionPaginatedByRank,
-    getQuestionPaginatedByTime, 
-    incrementLike, 
-    updateQuestion, 
+    postAnswer, 
+    updateAnswer, 
+    getAnswerByID, 
+    deleteAnswer, 
+    incrementLike
 };
   
-

@@ -6,6 +6,7 @@ const path = require('path');
 const { connectDB } = require('./database/connectDB');
 const accountRoutes = require('./routes/accountRoutes');
 const questionRoutes = require('./routes/questionRoutes');
+const answerRoutes = require('./routes/answerRoutes');
 
 connectDB();
 
@@ -29,6 +30,8 @@ app.use(
 
 app.use("/", accountRoutes);
 app.use("/", questionRoutes);
+app.use("/", answerRoutes);
+app.use("/", rewardRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

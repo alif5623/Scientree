@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 //user login
 const login = async (req, res) => {
   const { username, password } = req.body;
+  const timestamp = new Date().getTime();
+  console.log("Time: " + timestamp);
   //query to find email that match
   const query = `SELECT * FROM account WHERE username='${username}'`;    const result = await db.query(query);
   const user = result.rows[0];
@@ -18,6 +20,7 @@ const login = async (req, res) => {
         req.session.accountid = user.accountid;
         console.log('Received session identifier:', req.session.username, '\nAccountID: ', req.session.accountid); // Log the received session identifier
         res.status(200).json({ success: true, message: "Login Successful" });
+        //query = UPDATE account SET lastlogin = 
       }
       //if password not matched
       else {
