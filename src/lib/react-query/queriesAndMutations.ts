@@ -1,9 +1,11 @@
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+import { INewComment, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 import {
+    createComments,
     createPost,
     createUserAccount, 
     deletePost, 
     deleteSavedPost, 
+    getComments, 
     getCurrentUser, 
     getInfinitePosts, 
     getPostById, 
@@ -24,7 +26,8 @@ import {
     useMutation,
     useQueryClient,
     useInfiniteQuery,
-} from '@tanstack/react-query'
+} from '@tanstack/react-query';
+
 import { QUERY_KEYS } from "./queryKeys";
 
 export const useCreateUserAccount = () => {
@@ -230,3 +233,29 @@ export const useUpdateUser = () => {
         },
     });
 };
+
+// useCreateComments
+export const useCreateComments = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (comment: INewComment) => createComments(comment),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_COMMENTS],
+            });
+        },
+    });
+};
+
+// useGetComments
+export const useGetComments = (postId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_COMMENTS, postId],
+        queryFn: () => getComments(postId),
+        enabled: !!postId,
+    });
+};
+
+
+
+

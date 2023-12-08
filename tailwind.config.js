@@ -20,19 +20,19 @@ module.exports = {
     },
     extend: {
       colors: {
-        'primary-500': '#877EFF',
-        'primary-600': '#5D5FEF',
-        'secondary-500': '#FFB620',
-        'off-white': '#D0DFFF',
-        'red': '#FF5A5A',
-        'dark-1': '#000000',
-        'dark-2': '#09090A',
-        'dark-3': '#101012',
-        'dark-4': '#1F1F22',
-        'light-1': '#FFFFFF',
-        'light-2': '#EFEFEF',
-        'light-3': '#7878A3',
-        'light-4': '#5C5C7B',
+        'primary-500': '#1F618D', // Biru Tua
+        'primary-600': '#17202A', // Hitam
+        'secondary-500': '#3498DB', // Biru Terang
+        'off-white': '#D5DBDB', // Biru Abu-abu
+        'red': '#FF5A5A', // Merah
+        'dark-1': '#000000', // Hitam
+        'dark-2': '#17202A', // Hitam (Lainnya)
+        'dark-3': '#212F3D', // Hitam (Lebih Terang)
+        'dark-4': '#2E4053', // Hitam (Lebih Terang)
+        'light-1': '#FFFFFF', // Putih
+        'light-2': '#E5E7E9', // Biru Muda
+        'light-3': '#7B7D7D', // Biru Abu-abu
+        'light-4': '#85929E', // Biru Abu-abu
       },
       screens: {
         'xs': '480px',

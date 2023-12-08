@@ -1,4 +1,4 @@
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
+import { INewComment, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 import { ID, Query } from "appwrite";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 
@@ -484,3 +484,45 @@ export async function getUserById(userId: string) {
     }
 }
 
+
+// createComments
+export async function createComments(comment: INewComment) {
+    try {
+        // Membuat komentar baru pada postingan
+        const newComment = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.commentsCollectionId,
+            ID.unique(),
+            {
+                postId: comment.postId,
+                userId: comment.userId,
+                content: comment.content,
+            }
+        );
+
+        if (!newComment) throw Error;
+
+        return newComment;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+// getComments
+export async function getComments(postId: string) {
+    try {
+        // Mendapatkan daftar komentar untuk suatu postingan
+        const comments = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.commentsCollectionId,
+            [Query.equal("postId", postId)]
+        );
+
+        if (!comments) throw Error;
+
+        return comments;
+    } catch (error) {
+        console.log(error);
+    }
+}

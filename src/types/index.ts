@@ -23,6 +23,13 @@ export type INewPost = {
     tags?: string;
 };
 
+export type INewComment = {
+    postId: string;
+    userId: string;
+    content: string;
+};
+
+
 export type IUpdatePost = {
     postId: string;
     caption: string;
@@ -57,3 +64,4 @@ export type IContextType = {
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
     checkAuthUser: () => Promise <boolean>;
 };
+

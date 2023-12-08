@@ -9,9 +9,12 @@ import {
   useGetPostById,
   useGetUserPosts,
   useDeletePost,
+  //useGetComments,
+  //useCreateComments,
 } from "@/lib/react-query/queriesAndMutations";
 import { multiFormatDateString } from "@/lib/utils";
 import { useUserContext } from "@/context/AuthContext";
+//import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
 
 const PostDetails = () => {
   const navigate = useNavigate();
@@ -23,6 +26,9 @@ const PostDetails = () => {
     post?.creator.$id
   );
   const { mutate: deletePost } = useDeletePost();
+
+  //const { data: comments, isLoading: isCommentsLoading } = useGetComments(post?.creator.$id); // Panggil fungsi yang mengambil daftar komentar berdasarkan ID post
+  
 
   const relatedPosts = userPosts?.documents.filter(
     (userPost) => userPost.$id !== id
@@ -135,6 +141,11 @@ const PostDetails = () => {
             <div className="w-full">
               <PostStats post={post} userId={user.id} />
             </div>
+
+            <div className="w-full">
+              <h3> Answers </h3>
+              
+            </div>
           </div>
         </div>
       )}
@@ -143,7 +154,7 @@ const PostDetails = () => {
         <hr className="border w-full border-dark-4/80" />
 
         <h3 className="body-bold md:h3-bold w-full my-10">
-          More Related Posts
+          More Related Questions
         </h3>
         {isUserPostLoading || !relatedPosts ? (
           <Loader />
