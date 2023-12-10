@@ -16,7 +16,8 @@ export enum QUERY_KEYS {
     GET_FILE_PREVIEW = "getFilePreview",
 
     // COMMENTS KEYs
-    GET_COMMENTS = "getComments",
+    //GET_COMMENTS = "createComments",
+    GET_COMMENTS= "getComments",
 
     //  SEARCH KEYS
     SEARCH_POSTS = "getSearchPosts",

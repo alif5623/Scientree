@@ -403,7 +403,10 @@ export async function searchPosts(searchTerm: string) {
         const posts = await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.postCollectionId,
-            [Query.search("caption", searchTerm)]
+            [
+                Query.search('caption', searchTerm),
+                Query.search('tags', searchTerm)
+            ]
         );
         if (!posts) throw Error;
         return posts;
@@ -496,7 +499,7 @@ export async function createComments(comment: INewComment) {
             {
                 postId: comment.postId,
                 userId: comment.userId,
-                content: comment.content,
+                content: comment.text,
             }
         );
 

@@ -17,7 +17,7 @@ export const sidebarLinks = [
     {
         imgURL: "/assets/icons/gallery-add.svg",
         route: "/create-post",
-        label: "Create Post",
+        label: "Create Question",
     },
 ];
 
@@ -35,7 +35,7 @@ export const bottombarLinks = [
     {
         imgURL: "/assets/icons/gallery-add.svg",
         route: "/create-post",
-        label: "Create",
+        label: "Create Question",
     },
     {
         imgURL: "/assets/icons/bookmark.svg",

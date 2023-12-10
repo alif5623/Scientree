@@ -26,7 +26,7 @@ export type INewPost = {
 export type INewComment = {
     postId: string;
     userId: string;
-    content: string;
+    text: string;
 };
 
 

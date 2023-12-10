@@ -87,10 +87,6 @@ const PostDetails = () => {
                     <p className="subtle-semibold lg:small-regular ">
                       {multiFormatDateString(post?.$createdAt)}
                     </p>
-                    •
-                    <p className="subtle-semibold lg:small-regular">
-                      {post?.location}
-                    </p>
                   </div>
                 </div>
               </Link>
@@ -144,7 +140,10 @@ const PostDetails = () => {
 
             <div className="w-full">
               <h3> Answers </h3>
-              
+            </div>
+
+            <div className="comments-form w-full">
+              <p>test</p>
             </div>
           </div>
         </div>
