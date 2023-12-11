@@ -9,54 +9,54 @@ import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import { PostValidation } from "@/lib/validation";
 import { Models } from "appwrite";
-import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations";
+import { useCreateComments, useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../shared/Loader";
 
 type PostFormProps = {
-    post?: Models.Document;
+    comment?: Models.Document;
     action: "Create" | "Update";
 };
 
-const PostForm = ({ post, action }: PostFormProps) => {
+const PostForm = ({ comment, action }: PostFormProps) => {
     const { user } = useUserContext();
     const navigate = useNavigate();
     const { toast } = useToast();
 
     // Query
-    const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
+    const { mutateAsync: createComments, isPending: isLoadingCreate } = useCreateComments();
     const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost();
     
     // 1. Define your form.
     const form = useForm<z.infer<typeof PostValidation>>({
         resolver: zodResolver(PostValidation),
         defaultValues: {
-            caption: post ? post?.caption: "",
+            caption: comment ? comment?.caption: "",
             file:[],
-            tags: post ? post.tags.join(',') : '',
+            tags: comment ? comment.tags.join(',') : '',
         },
     })
     
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof PostValidation>) {
-        if (post && action === "Update") {
+        if (comment && action === "Update") {
             const updatedPost = await updatePost({
                 ...values,
-                postId: post.$id,
-                imageId: post.imageId,
-                imageUrl: post.imageUrl,
+                postId: comment.$id,
+                imageId: comment.imageId,
+                imageUrl: comment.imageUrl,
             });
             if (!updatedPost) {
                 toast({
                     title: `${action} post failed. Please try again.`,
                 });
             }
-            return navigate(`/posts/${post.$id}`);
+            return navigate(`/posts/${comment.$id}`);
         }
         
-        const newPost = await createPost({
+        const newPost = await createComments({
             ...values,
             userId: user.id,
         });
@@ -95,7 +95,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                     <FormControl>
                         <FileUploader
                             fieldChange={field.onChange}
-                            mediaUrl={post?.imageUrl}
+                            mediaUrl={comment?.imageUrl}
                         />
                     </FormControl>
                     <FormMessage className="shad-form_message" />

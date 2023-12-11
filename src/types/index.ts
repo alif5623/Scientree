@@ -24,9 +24,11 @@ export type INewPost = {
 };
 
 export type INewComment = {
-    postId: string;
+    //postId: string;
     userId: string;
     text: string;
+    file: File[];
+    tags?: string;
 };
 
 

@@ -491,21 +491,41 @@ export async function getUserById(userId: string) {
 // createComments
 export async function createComments(comment: INewComment) {
     try {
-        // Membuat komentar baru pada postingan
-        const newComment = await databases.createDocument(
+        // Upload file to appwrite storage
+        const uploadedFile = await uploadFile(comment.file[0]);
+    
+        if (!uploadedFile) throw Error;
+    
+        // Get file url
+        const fileUrl = getFilePreview(uploadedFile.$id);
+        if (!fileUrl) {
+            await deleteFile(uploadedFile.$id);
+            throw Error;
+        }
+    
+        // Convert tags into array
+        const tags = comment.tags?.replace(/ /g, "").split(",") || [];
+    
+        // Create post
+        const newPost = await databases.createDocument(
             appwriteConfig.databaseId,
-            appwriteConfig.commentsCollectionId,
+            appwriteConfig.postCollectionId,
             ID.unique(),
             {
-                postId: comment.postId,
-                userId: comment.userId,
-                content: comment.text,
+            users: comment.userId,
+            text: comment.text,
+            imageUrl: fileUrl,
+            imageId: uploadedFile.$id,
+            tags: tags,
             }
         );
+    
+        if (!newPost) {
+            await deleteFile(uploadedFile.$id);
+            throw Error;
+        }
 
-        if (!newComment) throw Error;
-
-        return newComment;
+        return newPost;
     } catch (error) {
         console.log(error);
     }
