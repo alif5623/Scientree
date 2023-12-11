@@ -398,17 +398,17 @@ export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
     }
 }
 
+// ============================== GET POSTS
 export async function searchPosts(searchTerm: string) {
     try {
         const posts = await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.postCollectionId,
-            [
-                Query.search('caption', searchTerm),
-                Query.search('tags', searchTerm)
-            ]
+            [Query.search("caption", searchTerm)]
         );
+    
         if (!posts) throw Error;
+    
         return posts;
     } catch (error) {
         console.log(error);
