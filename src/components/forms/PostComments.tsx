@@ -20,7 +20,7 @@ type PostFormProps = {
     action: "Create" | "Update";
 };
 
-const PostForm = ({ comment, action }: PostFormProps) => {
+const PostComments = ({ comment, action }: PostFormProps) => {
     const { user } = useUserContext();
     const navigate = useNavigate();
     const { toast } = useToast();
@@ -56,12 +56,14 @@ const PostForm = ({ comment, action }: PostFormProps) => {
             return navigate(`/posts/${comment.$id}`);
         }
         
-        const newPost = await createComments({
+        const newComment = await createComments({
             ...values,
             userId: user.id,
+            text: values.caption, 
         });
+        
 
-        if(!newPost){
+        if(!newComment){
             toast({
                 title: `Please try again.`,
             });
@@ -137,4 +139,4 @@ const PostForm = ({ comment, action }: PostFormProps) => {
     )
 }
 
-export default PostForm;
+export default PostComments;

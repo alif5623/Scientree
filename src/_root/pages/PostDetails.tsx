@@ -137,14 +137,6 @@ const PostDetails = () => {
             <div className="w-full">
               <PostStats post={post} userId={user.id} />
             </div>
-
-            <div className="w-full">
-              <h3> Answers </h3>
-            </div>
-
-            <div className="comments-form w-full">
-              <p>test</p>
-            </div>
           </div>
         </div>
       )}
@@ -153,7 +145,7 @@ const PostDetails = () => {
         <hr className="border w-full border-dark-4/80" />
 
         <h3 className="body-bold md:h3-bold w-full my-10">
-          More Related Questions
+          Answers
         </h3>
         {isUserPostLoading || !relatedPosts ? (
           <Loader />
